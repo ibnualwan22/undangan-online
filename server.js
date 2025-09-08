@@ -1,6 +1,5 @@
 const express = require('express');
 const path = require('path');
-// BENAR: Gunakan require untuk mysql2 seperti ini
 const mysql = require('mysql2/promise');
 const dbConfig = require('./config/database');
 
@@ -16,10 +15,8 @@ app.use(express.urlencoded({ extended: true }));
 const pool = mysql.createPool(dbConfig);
 
 
-
 // === ROUTES (RUTE) ===
 app.get('/', (req, res) => {
-    // Arahkan halaman utama langsung ke undangan untuk pengalaman yang lebih baik
     res.redirect('/undangan');
 });
 
@@ -28,7 +25,6 @@ app.get('/undangan', async (req, res) => {
         const guestName = req.query.to || "Tamu Undangan";
         const finalGuestName = guestName.replace(/\+/g, ' ');
         
-        // Sesuaikan query dengan database Anda (contoh ini untuk PostgreSQL)
         const sql = 'SELECT nama, pesan, konfirmasi, created_at FROM ucapan ORDER BY created_at DESC';
         const [rows] = await pool.query(sql);
 
@@ -49,11 +45,10 @@ app.post('/ucapan', async (req, res) => {
     }
 
     try {
-        // Sesuaikan placeholder dengan database Anda ($1 untuk PG, ? untuk MySQL)
-        const sql = 'INSERT INTO ucapan (nama, pesan, konfirmasi) VALUES ($1, $2, $3)';
+        // PERBAIKAN: Gunakan placeholder '?' untuk MySQL
+        const sql = 'INSERT INTO ucapan (nama, pesan, konfirmasi) VALUES (?, ?, ?)';
         await pool.query(sql, [nama, pesan, konfirmasi]);
         
-        // Redirect kembali ke halaman undangan dengan nama tamu yang sama
         const guest = req.query.to ? `?to=${encodeURIComponent(req.query.to)}` : '';
         res.redirect(`/undangan${guest}&status=sukses`);
 
@@ -63,11 +58,5 @@ app.post('/ucapan', async (req, res) => {
     }
 });
 
-
-// === HAPUS SEMUA BAGIAN "MENJALANKAN SERVER" (app.listen) ===
-// Blok kode startServer() atau pool.connect().then(...) dihapus dari sini.
-
-
-// === TAMBAHKAN BARIS INI DI PALING BAWAH ===
 // Ini "menyerahkan" aplikasi Express Anda ke Vercel untuk dijalankan
 module.exports = app;
