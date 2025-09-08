@@ -1,0 +1,392 @@
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f4f1eb;
+    color: #4a4a4a;
+    text-align: center;
+    margin: 0;
+}
+.cover-page {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background-color: #f4f1eb;
+    color: #4a4a4a;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    z-index: 9999;
+    padding: 20px;
+    box-sizing: border-box;
+    transition: opacity 1s ease-out;
+}
+.cover-page.fade-out {
+    opacity: 0;
+}
+.cover-content h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8em;
+    color: #826a4b;
+}
+.cover-guest {
+    margin: 40px 0;
+}
+.cover-button {
+    background-color: #826a4b;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    padding: 12px 30px;
+    font-size: 1em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s;
+}
+.cover-button:hover {
+    background-color: #6a553a;
+    transform: scale(1.05);
+}
+
+/* === STYLING KONTEN UTAMA BARU === */
+.main-content {
+    opacity: 0;
+    transition: opacity 1s ease-in 0.5s;
+    padding: 20px 15px; /* Pindahkan padding body ke sini */
+}
+.main-content.visible {
+    opacity: 1;
+}
+
+
+/* === STYLING SYAIR BARU === */
+.poem-section {
+    padding: 20px 0;
+}
+.poem-section h2 {
+    font-family: 'Playfair Display', serif;
+    color: #826a4b;
+    margin-bottom: 25px;
+}
+.poem-text .arabic-text {
+    font-family: 'Noto Naskh Arabic', serif;
+    font-size: 1.8em;
+    direction: rtl; /* Teks Arab dari kanan ke kiri */
+    margin: 10px 0 5px 0;
+    font-weight: 700;
+}
+.poem-text .translation-text {
+    font-style: italic;
+    color: #666;
+    margin: 0 0 25px 0;
+    font-size: 0.9em;
+}
+.container {
+    max-width: 700px; /* Sedikit lebih lebar */
+    margin: 0 auto;
+    background-color: #ffffff;
+    padding: 20px 30px; /* Sesuaikan padding */
+    border-radius: 12px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12); /* Shadow lebih tebal */
+}
+
+.container > section {
+    margin-top: 40px;
+    padding-top: 30px;
+    border-top: 1px solid #e9ecef; /* Garis pemisah tipis */
+}
+
+.main-header, .guest-section {
+    padding-top: 0;
+    margin-top: 0;
+    border-top: none; /* Hilangkan garis pemisah untuk seksi pertama */
+}
+
+/* Sesuaikan kembali beberapa styling agar tetap konsisten */
+.event-section, .map-container, .rsvp-section {
+    border-top: none; /* Hapus border-top lama karena sudah dihandle di atas */
+    padding-top: 0;
+    margin-top: 0;
+}
+
+h1, h2 {
+    font-family: 'Playfair Display', serif;
+    color: #826a4b;
+}
+
+h1 {
+    font-size: 2.5em;
+    margin-bottom: 0;
+}
+
+h2 {
+    font-size: 2em;
+    margin-top: 10px;
+    margin-bottom: 30px;
+}
+
+.guest-section {
+    margin-top: 40px;
+    border-top: 1px solid #ddd;
+    padding-top: 30px;
+}
+
+.guest-name {
+    font-size: 1.8em;
+    color: #d4af37; /* Warna emas */
+    margin: 10px 0;
+}
+
+.rsvp-section {
+    margin-top: 40px;
+    border-top: 1px solid #ddd;
+    padding-top: 30px;
+}
+
+.rsvp-form .form-group {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.rsvp-form label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #555;
+}
+
+.rsvp-form input[type="text"],
+.rsvp-form textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 1em;
+    box-sizing: border-box; /* Penting agar padding tidak merusak layout */
+}
+
+.rsvp-form .radio-group {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+.rsvp-form .radio-group input {
+    margin-right: 5px;
+}
+
+
+.submit-btn {
+    display: inline-block;
+    width: 100%;
+    padding: 15px;
+    background-color: #826a4b;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 1.1em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.submit-btn:hover {
+    background-color: #6a553a;
+}
+
+.ucapan-list-container {
+    margin-top: 40px;
+    text-align: left;
+}
+
+.ucapan-list {
+    max-height: 400px;
+    overflow-y: auto;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    padding: 10px;
+}
+
+.ucapan-item {
+    background-color: #fafafa;
+    border-radius: 5px;
+    padding: 15px;
+    margin-bottom: 10px;
+    border-left: 4px solid #826a4b;
+}
+
+.ucapan-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    font-size: 0.9em;
+}
+
+.ucapan-meta strong {
+    color: #333;
+}
+
+.status-badge {
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-size: 0.8em;
+    font-weight: bold;
+    color: white;
+}
+
+.status-badge.hadir {
+    background-color: #28a745; /* Hijau */
+}
+
+.status-badge.tidak-hadir {
+    background-color: #dc3545; /* Merah */
+}
+
+.ucapan-pesan {
+    font-style: italic;
+    color: #555;
+    margin: 0 0 10px 0;
+}
+
+.ucapan-timestamp {
+    font-size: 0.8em;
+    color: #999;
+}
+
+.event-section {
+    margin-top: 40px;
+    padding-top: 30px;
+    border-top: 1px solid #ddd;
+}
+
+.event-grid {
+    display: grid;
+    grid-template-columns: 1fr; /* Default 1 kolom untuk mobile */
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.event-card {
+    background-color: #fafafa;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    padding: 25px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.event-card h3 {
+    font-family: 'Playfair Display', serif;
+    color: #826a4b;
+    margin-top: 0;
+    margin-bottom: 20px;
+    font-size: 1.5em;
+    border-bottom: 2px solid #d4af37;
+    padding-bottom: 10px;
+    display: inline-block;
+}
+
+.event-card p {
+    margin: 8px 0;
+    line-height: 1.6;
+    font-size: 1em;
+}
+
+.event-card hr {
+    border: 0;
+    border-top: 1px solid #eee;
+    margin: 20px 0;
+}
+
+.event-location strong {
+    color: #333;
+}
+
+.map-container {
+    margin-top: 40px;
+}
+
+.map-container iframe {
+    border-radius: 8px;
+}
+
+/* Membuat 2 kolom untuk layar yang lebih besar (tablet/desktop) */
+@media (min-width: 768px) {
+    .event-grid {
+        grid-template-columns: 1fr 1fr; /* Jadi 2 kolom */
+    }
+}
+
+.countdown-section h2 {
+    font-family: 'Playfair Display', serif;
+    color: #826a4b;
+    margin-bottom: 25px;
+}
+
+#countdown {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    text-align: center;
+}
+
+.countdown-item {
+    background-color: #fafafa;
+    border: 1px solid #eee;
+    padding: 15px;
+    border-radius: 8px;
+    min-width: 70px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.countdown-item span {
+    display: block;
+    font-size: 2.5em;
+    font-weight: bold;
+    font-family: 'Playfair Display', serif;
+    color: #826a4b;
+}
+
+.countdown-item small {
+    display: block;
+    font-size: 0.9em;
+    margin-top: 5px;
+    color: #777;
+}
+
+/* Penyesuaian untuk layar lebih kecil */
+@media (max-width: 480px) {
+    .countdown-item {
+        padding: 10px;
+        min-width: 55px;
+    }
+    .countdown-item span {
+        font-size: 2em;
+    }
+}
+
+.prologue-section {
+    text-align: center;
+    padding: 10px 15px; /* Sedikit padding agar tidak terlalu mepet */
+    line-height: 1.8;   /* Jarak antar baris agar nyaman dibaca */
+    font-size: 0.98em;
+    color: #555;
+}
+
+.prologue-section p {
+    margin-bottom: 1.5em; /* Jarak antar paragraf */
+}
+
+.prologue-divider {
+    border: 0;
+    border-top: 1px solid #eee;
+    margin: 30px auto; /* Jarak atas-bawah 30px, auto untuk tengah */
+    width: 60%;
+}
+
+.prologue-section strong {
+    font-size: 1.05em; /* Sedikit lebih besar untuk penekanan */
+    color: #333;
+}
