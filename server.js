@@ -49,8 +49,7 @@ app.post('/ucapan', async (req, res) => {
         const sql = 'INSERT INTO ucapan (nama, pesan, konfirmasi) VALUES (?, ?, ?)';
         await pool.query(sql, [nama, pesan, konfirmasi]);
         
-        const guest = req.query.to ? `?to=${encodeURIComponent(req.query.to)}` : '';
-        res.redirect(`/undangan${guest}&status=sukses`);
+        res.redirect('/undangan?status=sukses');
 
     } catch (error) {
         console.error("Gagal menyimpan ucapan:", error);
