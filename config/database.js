@@ -14,7 +14,7 @@ const config = {
     password: process.env.PROD_DB_PASSWORD,
     database: process.env.PROD_DB_NAME,
     port: process.env.PROD_DB_PORT,
-    ssl: { "rejectUnauthorized": true } // Beberapa provider cloud memerlukan ini
+    ssl: { "rejectUnauthorized": false } // Beberapa provider cloud memerlukan ini
   }
 };
 
