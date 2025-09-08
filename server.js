@@ -1,12 +1,10 @@
 const express = require('express');
 const path = require('path');
-// Pastikan Anda menggunakan driver yang sesuai (pg untuk PostgreSQL atau mysql2 untuk MySQL)
-const { Pool } = require('mysql2'); 
+// BENAR: Gunakan require untuk mysql2 seperti ini
+const mysql = require('mysql2/promise');
 const dbConfig = require('./config/database');
 
 const app = express();
-// PORT tidak lagi dibutuhkan di Vercel, tapi biarkan saja tidak apa-apa
-const PORT = process.env.PORT || 3000; 
 
 // === KONFIGURASI APLIKASI ===
 app.set('view engine', 'ejs');
@@ -14,8 +12,9 @@ app.set('views', path.join(__dirname, 'views'));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.urlencoded({ extended: true }));
 
-// Membuat connection pool ke database
-const pool = new Pool(dbConfig);
+// BENAR: Gunakan mysql.createPool untuk membuat koneksi MySQL
+const pool = mysql.createPool(dbConfig);
+
 
 
 // === ROUTES (RUTE) ===
@@ -31,11 +30,11 @@ app.get('/undangan', async (req, res) => {
         
         // Sesuaikan query dengan database Anda (contoh ini untuk PostgreSQL)
         const sql = 'SELECT nama, pesan, konfirmasi, created_at FROM ucapan ORDER BY created_at DESC';
-        const result = await pool.query(sql);
+        const [rows] = await pool.query(sql);
 
         res.render('undangan', { 
             namaTamu: finalGuestName,
-            daftarUcapan: result.rows 
+            daftarUcapan: rows 
         });
     } catch (error) {
         console.error("Gagal mengambil data ucapan:", error);
