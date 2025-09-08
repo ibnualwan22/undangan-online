@@ -1,96 +1,74 @@
 const express = require('express');
 const path = require('path');
-const mysql = require('mysql2/promise');
+// Pastikan Anda menggunakan driver yang sesuai (pg untuk PostgreSQL atau mysql2 untuk MySQL)
+const { Pool } = require('mysql2'); 
 const dbConfig = require('./config/database');
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+// PORT tidak lagi dibutuhkan di Vercel, tapi biarkan saja tidak apa-apa
+const PORT = process.env.PORT || 3000; 
 
 // === KONFIGURASI APLIKASI ===
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 app.use(express.static(path.join(__dirname, 'public')));
-
-// Middleware untuk membaca data dari form (penting!)
 app.use(express.urlencoded({ extended: true }));
 
-
-// === KONEKSI DATABASE ===
-const pool = mysql.createPool(dbConfig);
+// Membuat connection pool ke database
+const pool = new Pool(dbConfig);
 
 
 // === ROUTES (RUTE) ===
 app.get('/', (req, res) => {
-    res.send('<h1>Selamat Datang di Server Undangan Online!</h1><p>Coba akses /undangan?to=NamaAnda</p>');
+    // Arahkan halaman utama langsung ke undangan untuk pengalaman yang lebih baik
+    res.redirect('/undangan');
 });
 
 app.get('/undangan', async (req, res) => {
     try {
-        // Ambil nama tamu dari query URL
         const guestName = req.query.to || "Tamu Undangan";
         const finalGuestName = guestName.replace(/\+/g, ' ');
-
-        // Ambil semua data ucapan dari database
-        const connection = await pool.getConnection();
+        
+        // Sesuaikan query dengan database Anda (contoh ini untuk PostgreSQL)
         const sql = 'SELECT nama, pesan, konfirmasi, created_at FROM ucapan ORDER BY created_at DESC';
-        const [rows] = await connection.query(sql);
-        connection.release();
+        const result = await pool.query(sql);
 
-        // Render file 'undangan.ejs' dan kirimkan DUA data: namaTamu dan daftarUcapan
         res.render('undangan', { 
             namaTamu: finalGuestName,
-            daftarUcapan: rows // Ini adalah array berisi semua ucapan
+            daftarUcapan: result.rows 
         });
     } catch (error) {
         console.error("Gagal mengambil data ucapan:", error);
-        res.status(500).send("Terjadi kesalahan pada server.");
+        res.status(500).send("Terjadi kesalahan pada server saat mengambil data.");
     }
 });
 
-// Rute BARU untuk menangani data form (method POST)
 app.post('/ucapan', async (req, res) => {
-    // Ambil data dari body request yang dikirim form
     const { nama, pesan, konfirmasi } = req.body;
-
-    // Validasi sederhana
     if (!nama || !pesan || !konfirmasi) {
         return res.status(400).send("Semua kolom harus diisi!");
     }
 
     try {
-        const connection = await pool.getConnection();
-        const sql = 'INSERT INTO ucapan (nama, pesan, konfirmasi) VALUES (?, ?, ?)';
+        // Sesuaikan placeholder dengan database Anda ($1 untuk PG, ? untuk MySQL)
+        const sql = 'INSERT INTO ucapan (nama, pesan, konfirmasi) VALUES ($1, $2, $3)';
+        await pool.query(sql, [nama, pesan, konfirmasi]);
         
-        // Eksekusi query dengan data yang aman (mencegah SQL Injection)
-        await connection.query(sql, [nama, pesan, konfirmasi]);
-        
-        connection.release();
-        
-        // Setelah berhasil, redirect kembali ke halaman undangan
-        // Anda bisa menambahkan parameter untuk menampilkan pesan sukses
-        res.redirect('/undangan?status=sukses');
+        // Redirect kembali ke halaman undangan dengan nama tamu yang sama
+        const guest = req.query.to ? `?to=${encodeURIComponent(req.query.to)}` : '';
+        res.redirect(`/undangan${guest}&status=sukses`);
 
     } catch (error) {
         console.error("Gagal menyimpan ucapan:", error);
-        res.status(500).send("Terjadi kesalahan pada server.");
+        res.status(500).send("Terjadi kesalahan pada server saat menyimpan data.");
     }
 });
 
 
-// === MENJALANKAN SERVER ===
-async function startServer() {
-    try {
-        const connection = await pool.getConnection();
-        console.log('✅ Koneksi ke database MySQL berhasil!');
-        connection.release();
-        
-        app.listen(PORT, () => {
-            console.log(`🚀 Server berjalan di http://localhost:${PORT}`);
-        });
-    } catch (error) {
-        console.error('❌ Gagal terkoneksi ke database MySQL:', error.message);
-        process.exit(1);
-    }
-}
+// === HAPUS SEMUA BAGIAN "MENJALANKAN SERVER" (app.listen) ===
+// Blok kode startServer() atau pool.connect().then(...) dihapus dari sini.
 
-startServer();
+
+// === TAMBAHKAN BARIS INI DI PALING BAWAH ===
+// Ini "menyerahkan" aplikasi Express Anda ke Vercel untuk dijalankan
+module.exports = app;
