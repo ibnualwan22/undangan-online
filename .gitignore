@@ -3,3 +3,4 @@ node_modules/
 
 # Abaikan file environment
 .env
+.vercel
