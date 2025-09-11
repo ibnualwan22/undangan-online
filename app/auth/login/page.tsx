@@ -11,7 +11,7 @@ import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
 
-export default function LoginPage() {
+export default function Page() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [error, setError] = useState<string | null>(null)
@@ -25,25 +25,15 @@ export default function LoginPage() {
     setError(null)
 
     try {
-      // Check rate limit
-      const rateLimitResponse = await fetch("/api/auth/rate-limit", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ action: "login" }),
-      })
-
-      if (!rateLimitResponse.ok) {
-        const rateLimitData = await rateLimitResponse.json()
-        throw new Error(rateLimitData.error || "Rate limit exceeded")
-      }
-
       const { error } = await supabase.auth.signInWithPassword({
         email,
         password,
+        options: {
+          emailRedirectTo: process.env.NEXT_PUBLIC_DEV_SUPABASE_REDIRECT_URL || `${window.location.origin}/protected`,
+        },
       })
-
       if (error) throw error
-      router.push("/dashboard")
+      router.push("/protected")
     } catch (error: unknown) {
       setError(error instanceof Error ? error.message : "An error occurred")
     } finally {
@@ -91,7 +81,7 @@ export default function LoginPage() {
                 </div>
                 <div className="mt-4 text-center text-sm">
                   Don&apos;t have an account?{" "}
-                  <Link href="/auth/register" className="underline underline-offset-4">
+                  <Link href="/auth/sign-up" className="underline underline-offset-4">
                     Sign up
                   </Link>
                 </div>
